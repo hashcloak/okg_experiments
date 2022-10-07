@@ -14,27 +14,20 @@ class ObliviousGraph(Graph):
         self._rdf_graph = rdf_graph
         self._networkx_graph = rdflib_to_networkx_multidigraph(rdf_graph)
         self._adjacency_matrix = nx.adjacency_matrix(self._networkx_graph)
-        self.obv_adj_matrix = OptimalORAM(size=self._adjacency_matrix.size)
-        self.size_of_obj_adj_matrix = self.obv_adj_matrix.
+        self.size_of_obj_adj_matrix = self._adjacency_matrix.shape[0]
+        self.obv_adj_matrix = OptimalORAM(size=self.size_of_obj_adj_matrix)
         for i in range(self.size_of_obj_adj_matrix):
             row = self._adjacency_matrix.getrow(i).toarray().tolist()
             self.obv_adj_matrix[i] = tuple(row[0])
-
 
     def __str__(self):
         pass
         
 
-    def parse(self):
-        pass
-
+    """
+    Adds an RDF triple to the oblivious graph
+    """
     def add(self):
-        pass
-
-    def remove(self):
-        pass
-
-    def commit(self):
         pass
 
     def triples(self):
