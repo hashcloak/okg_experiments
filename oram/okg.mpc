@@ -3,7 +3,7 @@ from rdflib.extras.external_graph_libs import rdflib_to_networkx_multidigraph
 import networkx as nx
 import sys
 sys.path.append("../MP-SPDZ")
-from Compiler.circuit_oram import CircuitORAM
+from Compiler.circuit_oram import OptimalORAM
 
 class ObliviousGraph(Graph):
 
@@ -11,7 +11,19 @@ class ObliviousGraph(Graph):
     Pass in an already parsed RDF Graph as given by Graph.parse in RDFLib
     """
     def __init__(self, rdf_graph):
-        self._adjacency_graph = nx.adjacency_matrix(rdflib_to_networkx_multidigraph(rdf_graph))
+        self._rdf_graph = rdf_graph
+        self._networkx_graph = rdflib_to_networkx_multidigraph(rdf_graph)
+        self._adjacency_matrix = nx.adjacency_matrix(self._networkx_graph)
+        self.obv_adj_matrix = OptimalORAM(size=self._adjacency_matrix.size)
+        self.size_of_obj_adj_matrix = self.obv_adj_matrix.
+        for i in range(self.size_of_obj_adj_matrix):
+            row = self._adjacency_matrix.getrow(i).toarray().tolist()
+            self.obv_adj_matrix[i] = tuple(row[0])
+
+
+    def __str__(self):
+        pass
+        
 
     def parse(self):
         pass
@@ -30,9 +42,6 @@ class ObliviousGraph(Graph):
 
     def query(self):
         pass
-
-if '__name__' == '__main__':
-    pass
 
 g = Graph()
 g.parse("http://www.w3.org/People/Berners-Lee/card")
