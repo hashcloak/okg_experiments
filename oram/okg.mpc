@@ -16,8 +16,6 @@ def int_to_string(integer):
     string = binascii.unhexlify(format(integer, "x").encode("utf-8")).decode("utf-8")
     return string
 
-def regular_fixed_point_to_sfix(fixed_point):
-    pass
 
 class ObliviousGraph(Graph):
 
@@ -39,8 +37,15 @@ class ObliviousGraph(Graph):
             self.obv_adj_matrix[i] = tuple(self._adjacency_matrix.getrow(i).toarray().tolist()[0])
             self.kg_oram[i] = tuple(self._adjacency_matrix_weights[i].astype(np.int64).tolist())
 
-    def _get_selection_matrix(self):
-        pass
+    def _get_selection_matrix(self, predicate):
+        selection_matrix = OptimalORAM(self.size_of_obj_adj_matrix)
+        for i in range(self.size_of_obj_adj_matrix):
+            for j in range(self.size_of_obj_adj_matrix):
+                if i == j:
+                    selection_matrix[i][i] = predicate
+                else:
+                    selection_matrix[i][j] = 0
+        return selection_matrix
 
     def _matrix_multiplication(self):
         pass
