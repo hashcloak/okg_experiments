@@ -27,6 +27,8 @@ class ObliviousGraph(Graph):
         self._networkx_graph = rdflib_to_networkx_multidigraph(rdf_graph, edge_attrs=lambda s,p,o : {"weights": string_to_int(p)}, transform_s=string_to_int,transform_o=string_to_int)
         self._adjacency_matrix_weights = nx.to_pandas_adjacency(self._networkx_graph).values
         self.kg_oram = OptimalORAM(len(self._networkx_graph.nodes())**2)
+        self.nodes = OptimalORAM(len(self._networkx_graph.nodes()))
+        self.nodes[0] = tuple(nx.to_pandas_adjacency(self._networkx_graph).index.tolist())
 
         # Generate Oblivious Adjacency Matrix
         self._adjacency_matrix = nx.adjacency_matrix(self._networkx_graph)
@@ -56,7 +58,7 @@ class ObliviousGraph(Graph):
     def get_all_pairs(self, predicate):
         pass
 
-    """
+    """707
     For a given set of (subject, predicate) pairs, return the object for those pairs
     """
     def get_objects(self):
