@@ -49,8 +49,19 @@ class ObliviousGraph(Graph):
                     selection_matrix[i][j] = 0
         return selection_matrix
 
-    def _matrix_multiplication(self):
-        pass
+    """
+    Does a matrix multiplication with 2 oram-based matrices.
+    NB: Currently implements a naive matrix multiplication algorithm. Should implement something like Strassen's algorithm for speed
+    """
+    def _matrix_multiplication(self, oram_matrix1, oram_matrix2):
+        assert oram_matrix1.oram.size == oram_matrix2.oram.size
+        size = oram_matrix1.oram.size
+        res = OptimalORAM(size)
+        for i in range(size):
+            for j in range(size):
+                res[i][j] += oram_matrix1[i][j] * oram_matrix2[i][j]
+        
+        return res
 
     """
     For a given predicate, get all pairs of (subject, objects) that have that predicate as their edge label
