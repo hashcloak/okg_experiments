@@ -64,10 +64,32 @@ class ObliviousGraph(Graph):
         return res
 
     """
+    Does a matrix multiplication with the LOR.iseq semiring as specified in section 3.2
+    """
+    def _semiring_matrix_multiplication(self, oram_matrix1, oram_matrix2):
+        assert oram_matrix1.oram.size == oram_matrix2.oram.size
+        size = oram_matrix1.oram.size
+        res = OptimalORAM(size)
+        for i in range(size):
+            for j in range(size):
+                if oram_matrix1[i][j] == oram_matrix2[i][j]:
+                    res[i][j] = 1
+                else:
+                    res[i][j] = 0
+        return 0
+
+    """
     For a given predicate, get all pairs of (subject, objects) that have that predicate as their edge label
     """
     def get_all_pairs(self, predicate):
-        pass
+        pairs = []
+        selection_matrix = self._get_selection_matrix(predicate)
+        binding_matrix = self._semiring_matrix_multiplication(selection_matrix, self.kg_oram)
+        for i in range(binding_matrix.oram.size):
+            for j in range(binding_matrix.oram.size):
+                if binding_matrix[i][j] == 1:
+                    pairs.append([self.nodes[i], self.nodes[j]])
+        return pairs
 
     """707
     For a given set of (subject, predicate) pairs, return the object for those pairs
