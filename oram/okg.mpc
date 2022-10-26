@@ -3,19 +3,9 @@ from rdflib.extras.external_graph_libs import rdflib_to_networkx_multidigraph
 import networkx as nx
 import numpy as np
 import sys
-import binascii
-sys.path.append("../MP-SPDZ")
+sys.path.append("../")
+from oram_utils import string_to_int, int_to_string
 from Compiler.circuit_oram import OptimalORAM
-from Compiler.circuit import sha3_256
-
-def string_to_int(string):
-    reg_int = int(binascii.hexlify(string.encode("utf-8")), 16)
-    return reg_int
-
-def int_to_string(integer):
-    string = binascii.unhexlify(format(integer, "x").encode("utf-8")).decode("utf-8")
-    return string
-
 
 class ObliviousGraph(Graph):
 
@@ -100,4 +90,3 @@ class ObliviousGraph(Graph):
 g = Graph()
 g.parse("http://www.w3.org/People/Berners-Lee/card")
 obv_graph = ObliviousGraph(g)
-
