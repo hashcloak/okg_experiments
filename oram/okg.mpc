@@ -81,6 +81,9 @@ class ObliviousGraph(Graph):
                     res[i][j] = 0
         return 0
 
+    def _any(self, oram_matrix):
+        pass
+
     """
     For a given predicate, get all pairs of (subject, objects) that have that predicate as their edge label
     """
@@ -94,18 +97,7 @@ class ObliviousGraph(Graph):
                     pairs.append([self.nodes[i], self.nodes[j]])
         return pairs
 
-    """707
-    For a given set of (subject, predicate) pairs, return the object for those pairs
-    """
-    def get_objects(self):
-        pass
-
-    """
-    For a given set of (object, predicate) pairs, return the subject for those pairs
-    """
-    def get_subjects(self):
-        pass
-
 g = Graph()
 g.parse("http://www.w3.org/People/Berners-Lee/card")
 obv_graph = ObliviousGraph(g)
+
