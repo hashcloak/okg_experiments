@@ -5,7 +5,7 @@ import numpy as np
 import sys
 sys.path.append("../")
 from oram_utils import string_to_int, int_to_string
-from Compiler.circuit_oram import OptimalORAM
+from Compiler.oram import OptimalORAM
 
 class ObliviousGraph(Graph):
 
