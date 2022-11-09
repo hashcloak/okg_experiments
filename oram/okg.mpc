@@ -30,13 +30,13 @@ class ObliviousGraph(Graph):
             self.kg_oram[i] = tuple(self._adjacency_matrix_weights[i].astype(np.int64).tolist())
 
     def _get_selection_matrix(self, predicate):
-        selection_matrix = OptimalORAM(self.size_of_obj_adj_matrix)
+        selection_matrix = OptimalORAM(self.size_of_obj_adj_matrix**2)
         for i in range(self.size_of_obj_adj_matrix):
             for j in range(self.size_of_obj_adj_matrix):
                 if i == j:
-                    selection_matrix[i][i] = predicate
+                    selection_matrix[(i*self.size_of_obj_adj_matrix)+j] = predicate
                 else:
-                    selection_matrix[i][j] = 0
+                    selection_matrix[(i*self.size_of_obj_adj_matrix)+j] = 0
         return selection_matrix
 
     """
@@ -65,11 +65,8 @@ class ObliviousGraph(Graph):
         res = OptimalORAM(size)
         for i in range(size):
             for j in range(size):
-                if oram_matrix1[i][j] == oram_matrix2[i][j]:
-                    res[i][j] = 1
-                else:
-                    res[i][j] = 0
-        return 0
+                res[(i*self.size_of_obj_adj_matrix)+j] = (oram_matrix1[(i*self.size_of_obj_adj_matrix)+j] == oram_matrix2[(i*self.size_of_obj_adj_matrix)+j]).if_else(1, 0)
+        return res
 
     def _any(self, oram_matrix):
         pass
@@ -81,12 +78,20 @@ class ObliviousGraph(Graph):
         pairs = []
         selection_matrix = self._get_selection_matrix(predicate)
         binding_matrix = self._semiring_matrix_multiplication(selection_matrix, self.kg_oram)
-        for i in range(binding_matrix.oram.size):
-            for j in range(binding_matrix.oram.size):
-                if binding_matrix[i][j] == 1:
-                    pairs.append([self.nodes[i], self.nodes[j]])
+
+        @for_range(binding_matrix.oram.size)
+        def _(i):
+            @for_range(binding_matrix.oram.size)
+            def _(j):
+                pairs.extend((binding_matrix[(i*self.size_of_obj_adj_matrix)+j] == 1).if_else([[self.nodes[i], self.nodes[j]]], []))
         return pairs
 
 g = Graph()
 g.parse("http://www.w3.org/People/Berners-Lee/card")
 obv_graph = ObliviousGraph(g)
+
+query = sint.get_input_from(0)
+query_results = obv_graph.get_all_pairs(query)
+for query_result in query_results:
+    print_ln("%s", query_result.reveal_to(0))
+    print_ln("Query result as a string: " + int_to_string(query_result.reveal()))
