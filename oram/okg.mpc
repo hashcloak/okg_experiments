@@ -24,6 +24,7 @@ class ObliviousGraph(Graph):
         self._adjacency_matrix = nx.adjacency_matrix(self._networkx_graph)
         self.size_of_obj_adj_matrix = self._adjacency_matrix.shape[0]
         self.obv_adj_matrix = OptimalORAM(size=self.size_of_obj_adj_matrix)
+
         for i in range(self.size_of_obj_adj_matrix):
             #row = self._adjacency_matrix.getrow(i).toarray().tolist()
             self.obv_adj_matrix[i] = tuple(self._adjacency_matrix.getrow(i).toarray().tolist()[0])
@@ -31,8 +32,10 @@ class ObliviousGraph(Graph):
 
     def _get_selection_matrix(self, predicate):
         selection_matrix = OptimalORAM(self.size_of_obj_adj_matrix**2)
-        for i in range(self.size_of_obj_adj_matrix):
-            for j in range(self.size_of_obj_adj_matrix):
+        @for_range(self.size_of_obj_adj_matrix)
+        def _(i):
+            @for_range(self.size_of_obj_adj_matrix)
+            def _(j):
                 if i == j:
                     selection_matrix[(i*self.size_of_obj_adj_matrix)+j] = predicate
                 else:
@@ -47,8 +50,10 @@ class ObliviousGraph(Graph):
         assert oram_matrix1.oram.size == oram_matrix2.oram.size
         size = oram_matrix1.oram.size
         res = OptimalORAM(size)
-        for i in range(size):
-            for j in range(size):
+        @for_range(size)
+        def _(i):
+            @for_range(size)
+            def _(j):
                 if i == j:
                     res[i][j] = oram_matrix1[i][j] * oram_matrix2[i][j]
                 else:
@@ -63,13 +68,12 @@ class ObliviousGraph(Graph):
         assert oram_matrix1.oram.size == oram_matrix2.oram.size
         size = oram_matrix1.oram.size
         res = OptimalORAM(size)
-        for i in range(size):
-            for j in range(size):
+        @for_range(size)
+        def _(i):
+            @for_range(size)
+            def _(j):
                 res[(i*self.size_of_obj_adj_matrix)+j] = (oram_matrix1[(i*self.size_of_obj_adj_matrix)+j] == oram_matrix2[(i*self.size_of_obj_adj_matrix)+j]).if_else(1, 0)
         return res
-
-    def _any(self, oram_matrix):
-        pass
 
     """
     For a given predicate, get all pairs of (subject, objects) that have that predicate as their edge label
