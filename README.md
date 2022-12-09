@@ -20,7 +20,7 @@ make bmr
 make shamir-bmr-party.x
 make real-bmr-party.x
 make semi-bmr-party.x
-make mal-shamir-bmr.party.x
+make mal-shamir-bmr-party.x
 ```
 4.
 ```
