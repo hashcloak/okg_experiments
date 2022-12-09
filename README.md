@@ -13,7 +13,7 @@ cd oram
 cd MP-SPDZ
 make tldr
 ```
-2. Add `-DINSECURE` to CONFIG.mid
+2. Add `-DINSECURE` to CONFIG.mine
 3.
 ```
 make bmr
