@@ -6,6 +6,8 @@
 ## To run
 1.
 ```
+git clone this repo
+git submodule update --init
 pip install -r requirements
 cd oram
 cd MP-SPDZ
